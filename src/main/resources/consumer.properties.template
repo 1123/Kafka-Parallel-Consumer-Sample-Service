@@ -1,0 +1,22 @@
+# Required connection configs for Kafka producer, consumer, and admin
+bootstrap.servers=
+security.protocol=SASL_SSL
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='' password='';
+sasl.mechanism=PLAIN
+# Required for correctness in Apache Kafka clients prior to 2.6
+client.dns.lookup=use_all_dns_ips
+
+# Best practice for higher availability in Apache Kafka clients prior to 3.0
+session.timeout.ms=45000
+
+group.id=pc_sample_app_2
+
+key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+
+enable.auto.commit=false
+
+# Required connection configs for Confluent Cloud Schema Registry
+# schema.registry.url=https://psrc-4nrnd.us-central1.gcp.confluent.cloud
+# basic.auth.credentials.source=USER_INFO
+# basic.auth.user.info={{ SR_API_KEY }}:{{ SR_API_SECRET }}
