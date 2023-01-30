@@ -12,6 +12,8 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -56,10 +58,13 @@ public class PcSampleService {
         ParallelStreamProcessor<String, String> eosStreamProcessor =
                 ParallelStreamProcessor.createEosStreamProcessor(options);
 
-        eosStreamProcessor.subscribe(of(INPUT_TOPIC_1, INPUT_TOPIC_2));
+        eosStreamProcessor.subscribe(of("numbers"));
 
         return eosStreamProcessor;
     }
+
+
+    List<String> failedMessages = new ArrayList<>();
 
     public void run() throws IOException {
         ParallelStreamProcessor<String, String> processor = getParallelStreamProcessor();
@@ -69,7 +74,17 @@ public class PcSampleService {
             var consumerRecord = context.getSingleRecord().getConsumerRecord();
             log.info("Start processing record: {}", consumerRecord);
                     int waittime = r.nextInt(5 * 1000);
+                    String partitionAndOffset = String.format("p-%d-o-%d", consumerRecord.partition(), consumerRecord.offset());
+                    if (failedMessages.contains(partitionAndOffset)) {
+                        log.info("Reprocessing of failed message {}", partitionAndOffset);
+                        processor.close();
+                        System.exit(0);
+                    }
                     try {
+                        if (waittime % 5 == 0) {
+                            failedMessages.add(partitionAndOffset);
+                            throw new RuntimeException(String.format("This message cannot be processed: %s", partitionAndOffset));
+                        }
                         Thread.sleep(waittime);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -97,5 +112,9 @@ public class PcSampleService {
         });
         */
     }
+
+}
+
+class UnprocessableMessageException extends RuntimeException {
 
 }
