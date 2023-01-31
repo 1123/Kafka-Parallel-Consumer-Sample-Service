@@ -98,19 +98,6 @@ public class PcSampleService {
                 }
         );
 
-        /*
-        processor.poll(record -> {
-            log.info("Start processing record: {}", record);
-            try {
-                // TODO: simulate failure of message processing.
-                int waittime = r.nextInt(5 * 1000);
-                Thread.sleep(waittime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            log.info("End processing record: {}", record);
-        });
-        */
     }
 
 }

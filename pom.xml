@@ -26,6 +26,11 @@
             <version>${parallel-consumer.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.confluent.parallelconsumer</groupId>
+            <artifactId>parallel-consumer-vertx</artifactId>
+            <version>${parallel-consumer.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>RELEASE</version>
